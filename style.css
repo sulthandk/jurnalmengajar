@@ -1,0 +1,67 @@
+.dashboard {
+  background-color: #007bff; /* Change to your preferred color */
+  color: white; /* Text color */
+  padding: 20px; /* Padding around the text */
+  text-align: center; /* Center align text */
+  margin-bottom: 20px; /* Space below the header */
+  border-radius: 8px; /* Rounded corners */
+}
+
+.table {
+  width: 100%; /* Make table full width */
+}
+
+.container-fluid {
+  padding: 0 15px; /* Optional: Adjust container padding if needed */
+}
+
+.main-content {
+  padding: 0; /* Remove any extra padding around the main content */
+}
+
+.box1 h3 {
+  float: left;
+}
+
+.box1 button {
+  float: right;
+}
+
+.container {
+  margin-top: 30px;
+}
+
+.empty_email_message {
+  text-align: center;
+  color: red;
+  font-size: large;
+}
+.delete_message {
+  text-align: center;
+  color: red;
+  font-size: large;
+}
+
+.insert_succes_message {
+  text-align: center;
+  color: blue;
+  font-size: large;
+}
+.update_message {
+  text-align: center;
+  color: blue;
+  font-size: large;
+}
+
+.trademark {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  text-align: left;
+  background-color: transparent; /* Optional: Add background color */
+  padding: 10px; /* Optional: Add padding */
+}
+
+.btn btn-primary {
+  padding: 20px;
+}
