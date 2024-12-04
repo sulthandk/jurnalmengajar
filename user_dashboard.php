@@ -13,17 +13,34 @@ if (!isset($_SESSION['role']) || $_SESSION['role'] !== 'user') {
 // Mengambil user_id dari sesi
 $user_id = $_SESSION['user_id'] ?? die("User ID tidak tersedia.");
 
-// Mengambil jurnal untuk pengguna yang terdaftar
+$kelas_filter = $_GET['kelas'] ?? '';
+$mapel_filter = $_GET['mapel'] ?? '';
+$month_filter = $_GET['month'] ?? '';
+
+// Base query
 $query = "SELECT j.id, j.tanggal, k.kelas_name, m.mapel_name, j.materi, j.tidak_hadir 
           FROM jurnal j
           JOIN kelas k ON j.kelas_id = k.id
           JOIN mapel m ON j.mapel_id = m.id
-          WHERE j.user_id = '$user_id'"; // Filter berdasarkan user_id
+          WHERE j.user_id = '$user_id'";
 
-$result = mysqli_query($connection, $query); // Eksekusi kueri
-if (!$result) {
-    die("Kueri gagal: " . mysqli_error($connection)); // Menampilkan pesan kesalahan jika kueri gagal
+// Add filters to the query
+if ($kelas_filter) {
+    $query .= " AND k.kelas_name = '" . mysqli_real_escape_string($connection, $kelas_filter) . "'";
 }
+if ($mapel_filter) {
+    $query .= " AND m.mapel_name = '" . mysqli_real_escape_string($connection, $mapel_filter) . "'";
+}
+if ($month_filter) {
+    $query .= " AND MONTH(j.tanggal) = '" . mysqli_real_escape_string($connection, $month_filter) . "'";
+}
+
+$result = mysqli_query($connection, $query);
+if (!$result) {
+    die("Query failed: " . mysqli_error($connection));
+}
+
+
 ?>
 
 <h5 style="display: inline;">Dashboard user: <span style="color: blue;"><?php echo $_SESSION['email']; ?></span></h5>
@@ -37,6 +54,99 @@ if (!$result) {
     <button type="button" class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#exampleModal">Buat</button>
 
 </div>
+
+<!-- Single Filter Button -->
+<div class="dropdown">
+    <button class="btn btn-primary dropdown-toggle" type="button" id="filterDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+        Filter
+    </button>
+    <style>
+        #filterDropdown {
+            margin-left: 585px;
+            /* Adds space between the filter button and the other buttons */
+            display: inline-block;
+            /* Ensures it aligns with other buttons */
+            vertical-align: middle;
+            /* Ensures vertical alignment matches other buttons */
+        }
+
+        .dropdown {
+            display: inline-block;
+            /* Keeps the dropdown inline with other buttons */
+        }
+    </style>
+
+    <ul class="dropdown-menu p-3" aria-labelledby="filterDropdown">
+        <li>
+            <label for="filterKelas">Kelas:</label>
+            <select id="filterKelas" class="form-select mb-2">
+                <option value="">All</option>
+                <!-- Populate kelas options dynamically -->
+                <?php
+                $kelasQuery = "SELECT DISTINCT kelas_name FROM kelas";
+                $kelasResult = mysqli_query($connection, $kelasQuery);
+                while ($kelasRow = mysqli_fetch_assoc($kelasResult)) {
+                    echo "<option value=\"{$kelasRow['kelas_name']}\">{$kelasRow['kelas_name']}</option>";
+                }
+                ?>
+            </select>
+        </li>
+        <li>
+            <label for="filterMapel">Mapel:</label>
+            <select id="filterMapel" class="form-select mb-2">
+                <option value="">All</option>
+                <!-- Populate mapel options dynamically -->
+                <?php
+                $mapelQuery = "SELECT DISTINCT mapel_name FROM mapel";
+                $mapelResult = mysqli_query($connection, $mapelQuery);
+                while ($mapelRow = mysqli_fetch_assoc($mapelResult)) {
+                    echo "<option value=\"{$mapelRow['mapel_name']}\">{$mapelRow['mapel_name']}</option>";
+                }
+                ?>
+            </select>
+        </li>
+        <li>
+            <label for="filterMonth">Bulan:</label>
+            <select id="filterMonth" class="form-select mb-2">
+                <option value="">All</option>
+                <option value="01">January</option>
+                <option value="02">February</option>
+                <option value="03">March</option>
+                <option value="04">April</option>
+                <option value="05">May</option>
+                <option value="06">June</option>
+                <option value="07">July</option>
+                <option value="08">August</option>
+                <option value="09">September</option>
+                <option value="10">October</option>
+                <option value="11">November</option>
+                <option value="12">December</option>
+            </select>
+        </li>
+        <li class="text-center mt-2">
+            <button id="applyFilter" class="btn btn-success">Terapkan Filter</button>
+        </li>
+    </ul>
+</div>
+
+<script>
+    document.getElementById("applyFilter").addEventListener("click", function() {
+        // Get filter values
+        const kelas = document.getElementById("filterKelas").value;
+        const mapel = document.getElementById("filterMapel").value;
+        const month = document.getElementById("filterMonth").value;
+
+        // Reload page with filter parameters
+        const params = new URLSearchParams(window.location.search);
+        params.set("kelas", kelas);
+        params.set("mapel", mapel);
+        params.set("month", month);
+        window.location.search = params.toString();
+    });
+</script>
+
+
+
 
 <table class="table table-hover table-bordered table-striped">
     <thead>
@@ -135,7 +245,6 @@ foreach ($messages as $msg) {
         </div>
     </div>
 </form>
-
 <!-- Print Button -->
 
 <script>
