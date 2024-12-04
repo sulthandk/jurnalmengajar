@@ -1,6 +1,6 @@
 ## Hak Cipta
 Hak Cipta © 2024 Muhammad Sulthan Dary Kurahman.  
-Dilarang mendistribusikan ulang, memodifikasi, atau mengklaim karya ini sebagai milik Anda tanpa izin tertulis dari pemilik hak cipta.
+Dilarang mendistribusikan ulang, memodifikasi, atau mengklaim karya ini tanpa izin tertulis dari pemilik hak cipta.
 
 ## Ketentuan Penggunaan
 1. **Pendidikan dan Non-Komersial**: Proyek ini boleh digunakan untuk keperluan pembelajaran atau penelitian non-komersial, dengan tetap mencantumkan kredit kepada pemilik hak cipta.
